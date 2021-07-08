@@ -361,11 +361,11 @@ impl<T> Drop for Task<T> {
 }
 
 impl<T> Future for Task<T> {
-    type Output = T;
+    type Output = Option<T>;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         match self.poll_task(cx) {
-            Poll::Ready(t) => Poll::Ready(t.expect("task has failed")),
+            Poll::Ready(t) => Poll::Ready(t),
             Poll::Pending => Poll::Pending,
         }
     }
